@@ -19,3 +19,9 @@ DESCRIPTION
     perldist_strawberry used for building Strawberry perl release packages
     (MSI, ZIP).
 
+	This script has been modified for use of locally-hosted external libraries
+	and mingw64-6.3.0 with seh exceptions (instead of sjlj). It is intended to 
+	support development of Slic3r <http://slic3r.org>.
+
+	It provides fewer CPAN packages as well. 
+
