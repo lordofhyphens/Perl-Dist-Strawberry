@@ -116,7 +116,7 @@ sub run {
 
     # necessary workaround for building 32bit perl on 64bit Windows
     my @make_args = ("INST_DRV=$INST_DRV", "INST_TOP=$INST_TOP", "CCHOME=$CCHOME", "EMAIL=$cf_email");
-    push @make_args, 'GCC_4XX=define', 'GCCHELPERDLL=$(CCHOME)\bin\libgcc_s_sjlj-1.dll'; #perl-5.12/14 only
+    push @make_args, 'GCC_4XX=define', 'GCCHELPERDLL=$(CCHOME)\bin\libgcc_s_seh-1.dll'; #perl-5.12/14 only
 
     # enable debug build
     push @make_args, 'CFG=Debug' if $dbg > 0;
@@ -219,6 +219,8 @@ sub run {
   my $from;
   $from = catfile($image_dir, qw/c bin libgcc_s_sjlj-1.dll/);
   copy($from, catfile($image_dir, qw/perl bin libgcc_s_sjlj-1.dll/)) if -f $from;
+  $from = catfile($image_dir, qw/c bin libgcc_s_seh-1.dll/);
+  copy($from, catfile($image_dir, qw/perl bin libgcc_s_seh-1.dll/)) if -f $from;
   $from = catfile($image_dir, qw/c bin libstdc++-6.dll/);
   copy($from, catfile($image_dir, qw/perl bin libstdc++-6.dll/)) if -f $from;
   $from = catfile($image_dir, qw/c bin libwinpthread-1.dll/);
