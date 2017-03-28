@@ -129,17 +129,10 @@
             qw/ File-Find-Rule File-HomeDir File-Listing File-Remove File-ShareDir File-Which File-Copy-Recursive File-Slurp File::Map /,
             qw/ IO::All Path::Tiny Path::Class /,
 
-            # SSL & SSH & telnet
-            qw/ Net-SSLeay /,
-            { module=>'IO-Socket-SSL', skiptest=>1 }, # XXX-HACK: https://rt.cpan.org/Public/Bug/Display.html?id=95328
-            qw/ Net::Telnet /,
-
             # network
             qw/ IO::Socket::IP IO::Socket::INET6 IO::Socket::Socks /,
             qw/ HTTP-Server-Simple /,
             qw/ LWP::UserAgent /,
-            { module=>'LWP-Protocol-https', ignore_testfailure=>1 },    #XXX-TODO LWP-Protocol-https-6.04
-            qw/ Mojolicious /,
             { module=>'WWW::Mechanize', skiptest=>1 }, # tests hang
 
             # exceptions
@@ -190,6 +183,7 @@
          { do=>'apply_tt', args=>[ '<dist_sharedir>/extra-files/README.txt.tt', '<image_dir>/README.txt' ] },
          { do=>'apply_tt', args=>[ '<dist_sharedir>/extra-files/DISTRIBUTIONS.txt.tt', '<image_dir>/DISTRIBUTIONS.txt' ] },
          # fixed files
+         { do=>'copyfile', args=>[ '<image_dir/c/bin/gcc.exe', '<image_dir>/c/bin/cc.exe' ] },
          { do=>'copyfile', args=>[ '<dist_sharedir>/extra-files/licenses/License.rtf', '<image_dir>/licenses/License.rtf' ] },
          { do=>'copyfile', args=>[ '<dist_sharedir>/extra-files/relocation.pl.bat',    '<image_dir>/relocation.pl.bat' ] },
          { do=>'copyfile', args=>[ '<dist_sharedir>/extra-files/update_env.pl.bat',    '<image_dir>/update_env.pl.bat' ] },
@@ -301,44 +295,8 @@
     },
     ### NEXT STEP ###########################
     {
-       plugin => 'Perl::Dist::Strawberry::Step::CreateReleaseNotes', # no options needed
-    },
-    ### NEXT STEP ###########################
-    {
         disable => $ENV{SKIP_PDL_STEP}, ### hack
         plugin  => 'Perl::Dist::Strawberry::Step::BinaryToolsAndLibs',
-        install_packages => {
-            'fftw3'         => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_fftw-3.3.4-bin_20140728.zip',
-            'gnuplot'       => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_gnuplot-4.6.5-bin_20140728.zip',
-            'gsl'           => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_gsl-1.16-bin_20140728.zip',
-            'hdf4'          => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_hdf-4.2.10-bin_20140728.zip',
-            'hdf5'          => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_hdf5-1.8.13-bin_20140728.zip',
-            #'ncurses'       => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_ncurses-5.9-bin_20140728.zip',
-            'plplot'        => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_plplot-5.10.0-bin_20140728.zip',
-            'proj'          => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_proj-4.8.0-bin_20140728.zip',
-            'szip'          => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_szip-2.1-bin_20140728.zip',
-            'talib'         => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_ta-lib-0.4.0-bin_20140728.zip',
-            'netcdf'        => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_netcdf-4.3.2-bin_20140728.zip',
-            'lapack'        => '<package_url>/kmx/64_libs/gcc48-2014Q3/64bit_lapack-3.5.0-bin_20140728.zip',
-            'gdb'           => '<package_url>/kmx/64_tools/64bit_gdb-7.7.1-bin_20140727.zip',
-        },
-    },
-    ### NEXT STEP ###########################
-    {
-        disable => $ENV{SKIP_PDL_STEP}, ### hack
-        plugin => 'Perl::Dist::Strawberry::Step::InstallModules',
-        # modules specific to PDL edition
-        modules => [
-          qw/Devel::REPL Lexical::Persistence Astro::FITS::Header Inline Inline::C/,
-          { module => 'http://cpan.metacpan.org/authors/id/C/CH/CHM/PDL-2.007_03.tar.gz',
-            ignore_testfailure => 1,
-            makefilepl_param => 'PDLCONF=<dist_sharedir>\pdl\perldl2.conf',
-            env => {
-              PLPLOT_LIB     => '<image_dir>\c\share\plplot',
-              PLPLOT_DRV_DIR => '<image_dir>\c\share\plplot',
-            },
-          },
-        ],
     },
     ### NEXT STEP ###########################
     {
